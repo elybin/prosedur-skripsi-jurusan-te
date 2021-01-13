@@ -4,8 +4,19 @@ let lastCommitEndpoint =  "https://api.github.com/repos/" + userAndRepo + "/git/
 let getCommitDetailEndpoint = "https://api.github.com/repos/" + userAndRepo + "/git/commits/";
 
 $( document ).ready(function() {
-    getLastestCommit();
+  getLastestCommit();
+
+  // Slow scroll with anchors
+  (function ($) {
+    $(document).on("click", "a[href^=#]", function (e) {
+      e.preventDefault();
+      var id = $(this).attr("href");
+      $("html,body").animate({ scrollTop: $(id).offset().top }, 500);
+    });
+  })(jQuery);
 })
+
+
 
 function getLastestCommit(){
   let commitList = "";
