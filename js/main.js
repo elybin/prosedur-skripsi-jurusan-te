@@ -33,7 +33,7 @@ function getLastestCommit(){
           timeSince(unixDate) +
           " yang lalu oleh " +
           theCommitDetail.committer.name +
-          " <br/>(" +
+          " (" +
           theCommitDetail.message +
           ")";
         $("#last-update").html(writeIt);
