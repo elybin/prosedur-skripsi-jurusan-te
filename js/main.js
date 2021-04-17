@@ -1,6 +1,6 @@
 
 let userAndRepo = "elybin/prosedur-skripsi-jurusan-te";
-let lastCommitEndpoint =  "https://api.github.com/repos/" + userAndRepo + "/git/refs/heads/main";
+let lastCommitEndpoint =  "https://api.github.com/repos/" + userAndRepo + "/git/refs/heads/master";
 let getCommitDetailEndpoint = "https://api.github.com/repos/" + userAndRepo + "/git/commits/";
 
 $( document ).ready(function() {
