@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  app:
+    image: inanimate/httpd-ssl
+    container_name: app-prosedur-skripsi
+    volumes:
+      - ./:/usr/local/apache2/htdocs/
+    ports:
+    - 8080:80
+    - 8443:443
+    networks:
+      - proxy
+    labels:
+      - "traefik.http.routers.app-prosedur-skripsi-secure.rule=(Host(`localhost`) && PathPrefix(`/apps/prosedur-skripsi-jurusan-te/`))"
+      - "traefik.http.routers.app-prosedur-skripsi-secure.middlewares=app-prosedur-skripsi-stripprefix"
+      - "traefik.http.middlewares.app-prosedur-skripsi-stripprefix.stripprefix.prefixes=/apps/prosedur-skripsi-jurusan-te"
+      - "traefik.http.routers.app-prosedur-skripsi-secure.entrypoints=websecure"
+      - "traefik.docker.network=proxy"
+      - "traefik.enable=true"
+
+networks:
+  proxy:
+    external: true
