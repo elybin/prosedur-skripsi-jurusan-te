@@ -12,10 +12,16 @@ services:
     networks:
       - proxy
     labels:
+      - "traefik.http.routers.app-prosedur-skripsi-secure.entrypoints=websecure"
       - "traefik.http.routers.app-prosedur-skripsi-secure.rule=(Host(`localhost`) && PathPrefix(`/apps/prosedur-skripsi-jurusan-te/`))"
       - "traefik.http.routers.app-prosedur-skripsi-secure.middlewares=app-prosedur-skripsi-stripprefix"
       - "traefik.http.middlewares.app-prosedur-skripsi-stripprefix.stripprefix.prefixes=/apps/prosedur-skripsi-jurusan-te"
-      - "traefik.http.routers.app-prosedur-skripsi-secure.entrypoints=websecure"
+
+      - "traefik.http.routers.app-prosedur-skripsi-old-secure.entrypoints=websecure"
+      - "traefik.http.routers.app-prosedur-skripsi-old-secure.rule=(Host(`localhost`) && PathPrefix(`/apps/prosedur-skripsi-te/`))"
+      - "traefik.http.routers.app-prosedur-skripsi-old-secure.middlewares=app-prosedur-skripsi-old-stripprefix"
+      - "traefik.http.middlewares.app-prosedur-skripsi-old-stripprefix.stripprefix.prefixes=/apps/prosedur-skripsi-te"
+
       - "traefik.docker.network=proxy"
       - "traefik.enable=true"
 
