@@ -7,8 +7,8 @@ services:
     volumes:
       - ./:/usr/local/apache2/htdocs/
     ports:
-    - 8080:80
-    - 8443:443
+    - 1002:80
+    - 5002:443
     networks:
       - proxy
     labels:
