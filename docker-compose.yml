@@ -3,24 +3,27 @@ version: "3.8"
 services:
   app:
     image: inanimate/httpd-ssl
-    container_name: app-prosedur-skripsi
+    container_name: ${APP_CONTAINER_NAME}
     volumes:
       - ./:/usr/local/apache2/htdocs/
     ports:
-    - 1002:80
-    - 5002:443
+      - ${APP_HTTP_PORT}:80
+      - ${APP_HTTPS_PORT}:443
     networks:
       - proxy
     labels:
-      - "traefik.http.routers.app-prosedur-skripsi-secure.entrypoints=websecure"
-      - "traefik.http.routers.app-prosedur-skripsi-secure.rule=(Host(`${HOST}`) && PathPrefix(`/apps/prosedur-skripsi-jurusan-te/`))"
-      - "traefik.http.routers.app-prosedur-skripsi-secure.middlewares=app-prosedur-skripsi-stripprefix"
-      - "traefik.http.middlewares.app-prosedur-skripsi-stripprefix.stripprefix.prefixes=/apps/prosedur-skripsi-jurusan-te"
+      - "traefik.http.routers.${APP_CONTAINER_NAME}-secure.entrypoints=websecure"
+      - "traefik.http.routers.${APP_CONTAINER_NAME}-secure.rule=(Host(`${HOST}`) && PathPrefix(`${APP_PATH}`))"
+      - "traefik.http.routers.${APP_CONTAINER_NAME}-secure.middlewares=${APP_CONTAINER_NAME}-stripprefix,${APP_CONTAINER_NAME}-fix-trailing"
+      - "traefik.http.middlewares.${APP_CONTAINER_NAME}-stripprefix.stripprefix.prefixes=${APP_PATH}/"
+      - "traefik.http.middlewares.${APP_CONTAINER_NAME}-fix-trailing.redirectregex.regex=((?:.*([/][a-z0-9_-]{1,})$$).*$$)"
+      - "traefik.http.middlewares.${APP_CONTAINER_NAME}-fix-trailing.redirectregex.replacement=$${1}/"
 
-      - "traefik.http.routers.app-prosedur-skripsi-old-secure.entrypoints=websecure"
-      - "traefik.http.routers.app-prosedur-skripsi-old-secure.rule=(Host(`${HOST}`) && PathPrefix(`/apps/prosedur-skripsi-te/`))"
-      - "traefik.http.routers.app-prosedur-skripsi-old-secure.middlewares=app-prosedur-skripsi-old-stripprefix"
-      - "traefik.http.middlewares.app-prosedur-skripsi-old-stripprefix.stripprefix.prefixes=/apps/prosedur-skripsi-te"
+      - "traefik.http.routers.${APP_CONTAINER_NAME}-old-secure.entrypoints=websecure"
+      - "traefik.http.routers.${APP_CONTAINER_NAME}-old-secure.rule=(Host(`${HOST}`) && PathPrefix(`${APP_ALT_PATH}`))"
+      - "traefik.http.routers.${APP_CONTAINER_NAME}-old-secure.middlewares=${APP_CONTAINER_NAME}-old-to-new"
+      - "traefik.http.middlewares.${APP_CONTAINER_NAME}-old-to-new.redirectregex.regex=(?:.*(${APP_ALT_PATH})(.*)$$)"
+      - "traefik.http.middlewares.${APP_CONTAINER_NAME}-old-to-new.redirectregex.replacement=https://${HOST}${APP_PATH}$${2}"
 
       - "traefik.docker.network=proxy"
       - "traefik.enable=true"
